@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useChatbot } from "@/contexts/ChatbotContext";
 import { Mic, MicOff, Send, Image, Paperclip, Smile } from "lucide-react";
-import { sendMessageToBackend } from "@/pages/Index";
 
 const ChatInput: React.FC = () => {
   const { sendMessage } = useChatbot();
@@ -11,23 +10,15 @@ const ChatInput: React.FC = () => {
   const [isVoiceInput, setIsVoiceInput] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (message.trim() === "") return;
 
-    const userMessage = message;
+    sendMessage(message);
     setMessage("");
 
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-    }
-
-    try {
-      const assistantReply = await sendMessageToBackend(userMessage);
-      sendMessage(userMessage, assistantReply);
-    } catch (error) {
-      console.error("Error getting reply from backend:", error);
-      sendMessage(userMessage, "Oops! Something went wrong.");
     }
   };
 
